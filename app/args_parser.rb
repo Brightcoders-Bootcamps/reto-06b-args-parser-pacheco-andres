@@ -1,18 +1,14 @@
-register_flag = ARGV[0]
-port_flag = ARGV[1]
-port = ARGV[2]
-directory_flag = ARGV[3]
-path = ARGV[4]
+# frozen_string_literal: true
 
-class ArgsParser 
-  attr_accessor :register_flag, :port_flag, :port, :directory_flag, :path
+require_relative 'string.rb'
+params_array = ARGV
 
-  def initialize(register_flag, port_flag, port, directory_flag, path)
-    @register_flag = register_flag
-    @port_flag = port_flag
-    @port = port
-    @directory_flag = directory_flag
-    @path = path
+# logic class args parser
+class ArgsParser
+  attr_reader :params_array
+
+  def initialize(params_array)
+    @params_array = params_array
     @error_message = 'ok'
   end
 
@@ -21,48 +17,34 @@ class ArgsParser
   end
 
   def register_flag_exist?
-    if register_flag == '-l'
-      true
-    else
-      @error_message = 'Falta agregar valor a register_flag'
-      false
-    end
+    register_flag = params_array[0]
+    @error_message = 'Falta agregar valor a register_flag' if register_flag != '-l'
+    register_flag == '-l'
   end
 
   def port_flag_exist?
-    if port_flag == '-p'
-      true
-    else
-      @error_message = 'Falta agregar valor a port_flag'
-      false
-    end
+    port_flag = params_array[1]
+    @error_message = 'Falta agregar valor a port_flag' if port_flag != '-p'
+    port_flag == '-p'
   end
 
   def port_exist?
-    if port == '8080'
-      true
-    else
-      @error_message = 'Falta agregar valor a port'
-      false
-    end 
+    port = params_array[2]
+    @error_message = 'Falta agregar valor a port' if port != '8080'
+    port == '8080'
   end
 
   def directory_flag_exist?
-    if directory_flag == '-d'
-      true
-    else
-      @error_message = 'Falta agregar valor a directory_flag'
-      false
-    end
+    directory_flag = params_array[3]
+    @error_message = 'Falta agregar valor a directory_flag' if directory_flag != '-d'
+    directory_flag == '-d'
   end
 
   def path_exist?
-    if path != nil
-      true
-    else
-      @error_message = 'Falta agregar valor a path'
-      false
-    end
+    path = params_array[4]
+    path_present = StringUtility.present?(path)
+    @error_message = 'Falta agregar valor a path' unless path_present
+    path_present
   end
 
   def message_error
@@ -70,10 +52,6 @@ class ArgsParser
   end
 end
 
-
-a = ArgsParser.new(register_flag, port_flag, port, directory_flag, path)
-a.arguments_validation
-puts a.message_error
-
-
-
+result = ArgsParser.new(params_array)
+result.arguments_validation
+puts result.message_error

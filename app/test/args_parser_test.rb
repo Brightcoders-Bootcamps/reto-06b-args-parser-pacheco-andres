@@ -2,67 +2,49 @@
 
 require 'minitest/autorun'
 require_relative '../args_parser.rb'
+require_relative '../string.rb'
 
 # frame logic class test
 class ArgsParserTest < Minitest::Test
   def test_arguments_validation
-    result = ArgsParser.new(register_flag = '-l', port_flag = '-p', port = '8080', directory_flag = '-d', path = '/usr/test')
+    params_array =  ["-l", "-p", "8080", "-d", "/usr/test"]
+    result = ArgsParser.new(params_array)
 
     assert_equal result.arguments_validation, true
   end
 
   def test_missing_value_register_flag
-    register_flag = '-l'
-    port_flag = '-p'
-    port = '8080'
-    directory_flag = '-d'
-    path = '/usr/test'
-    result = ArgsParser.new(nil, port_flag, port, directory_flag, path)
+    params_array = ["-p", "8080", "-d", "/usr/test"]
+    result = ArgsParser.new(params_array)
     result.arguments_validation
     assert_equal result.message_error, 'Falta agregar valor a register_flag'
   end
 
   def test_missing_value_port_flag
-    register_flag = '-l'
-    port_flag = '-p'
-    port = '8080'
-    directory_flag = '-d'
-    path = '/usr/test'
-    result = ArgsParser.new(register_flag, nil, port, directory_flag, path)
+    params_array =  ["-l", "8080", "-d", "/usr/test"]
+    result = ArgsParser.new(params_array)
     result.arguments_validation
     assert_equal result.message_error, 'Falta agregar valor a port_flag'
   end
 
   def test_missing_value_port
-    register_flag = '-l'
-    port_flag = '-p'
-    port = '8080'
-    directory_flag = '-d'
-    path = '/usr/test'
-    result = ArgsParser.new(register_flag, port_flag, nil, directory_flag, path)
+    params_array =  ["-l", "-p", "-d", "/usr/test"]
+    result = ArgsParser.new(params_array)
     result.arguments_validation
-    assert_equal result.message_error,'Falta agregar valor a port'
+    assert_equal result.message_error, 'Falta agregar valor a port'
   end
 
   def test_missing_value_directory_flag
-    register_flag = '-l'
-    port_flag = '-p'
-    port = '8080'
-    directory_flag = '-d'
-    path = '/usr/test'
-    result = ArgsParser.new(register_flag, port_flag, port, nil, path)
+    params_array =  ["-l", "-p", "8080", "/usr/test"]
+    result = ArgsParser.new(params_array)
     result.arguments_validation
-    assert_equal result.message_error,'Falta agregar valor a directory_flag'
+    assert_equal result.message_error, 'Falta agregar valor a directory_flag'
   end
 
   def test_missing_value_path
-    register_flag = '-l'
-    port_flag = '-p'
-    port = '8080'
-    directory_flag = '-d'
-    path = '/usr/test'
-    result = ArgsParser.new(register_flag, port_flag, port, directory_flag, nil)
+    params_array =  ["-l", "-p", "8080", "-d"]
+    result = ArgsParser.new(params_array)
     result.arguments_validation
-    assert_equal result.message_error,'Falta agregar valor a path'
+    assert_equal result.message_error, 'Falta agregar valor a path'
   end
 end
